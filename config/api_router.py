@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.urls import path
+from djangojobboard.jobs.api.view import JobListView
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from djangojobboard.users.api.views import UserViewSet
@@ -12,4 +14,8 @@ router.register("users", UserViewSet)
 
 
 app_name = "api"
-urlpatterns = router.urls
+
+urlpatterns = [
+    path("jobs/", JobListView.as_view()),
+]
+urlpatterns += router.urls
