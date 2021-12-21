@@ -8,3 +8,10 @@ class JobListView(ListAPIView):
 
     def get_queryset(self):
         return Job.objects.filter(available=True)
+    
+    
+class JobCreateView(CreateAPIView):
+    serializer_class = JobSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
