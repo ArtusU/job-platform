@@ -15,7 +15,7 @@ export function JobDetail() {
       });
     }
     fetchJob();
-  }, []);
+  }, [id]);
 
   return (
     <div>
