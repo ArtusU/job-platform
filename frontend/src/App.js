@@ -1,39 +1,11 @@
-import { useEffect, useState } from "react"
-import axios from "axios"
+import React from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Link
 } from "react-router-dom";
-
-function JobList() {
-
-  const [jobs, setJobs] = useState(null)
-
-  useEffect(() => {
-    function fetchJobs() {
-      axios.get("http://127.0.0.1:8000/api/jobs/")
-        .then(res => {
-          console.log(res.data)
-          setJobs(res.data)
-        })
-    }
-    fetchJobs()
-  }, [])
-
-  return (
-    <>
-      {jobs && jobs.map((job, i) => {
-        return (
-          <div key={i}>
-            Job #{job.id}: {job.title}
-          </div>
-        )
-      })}
-    </>
-  );
-}
+import { JobList } from './components/JobList'
 
 
 export default function App() {
@@ -54,6 +26,8 @@ export default function App() {
           </ul>
         </nav>
 
+        {/* A <Routes> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
         <Routes>
           <Route path="/about" element={<About/>} />
           <Route path="/users" element={<Users />} />
