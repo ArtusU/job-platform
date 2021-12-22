@@ -1,9 +1,11 @@
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
+from rest_framework.permissions import AllowAny
 from djangojobboard.jobs.models import Job
 from .serializers import JobSerializer
 
 
 class JobListView(ListAPIView):
+    permission_classes = [AllowAny]
     serializer_class = JobSerializer
 
     def get_queryset(self):
