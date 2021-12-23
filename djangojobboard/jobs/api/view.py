@@ -1,5 +1,5 @@
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
-from rest_framework.permissions import AllowAny, isAuthenticated
+from rest_framework.permissions import AllowAny
 from djangojobboard.jobs.models import Job
 from .serializers import JobSerializer
 
@@ -13,7 +13,7 @@ class JobListView(ListAPIView):
     
     
 class JobCreateView(CreateAPIView):
-    permission_classes = [isAuthenticated]
+    #permission_classes = [isAuthenticated]
     serializer_class = JobSerializer
 
     def perform_create(self, serializer):

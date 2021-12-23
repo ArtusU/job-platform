@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { NavLink } from "react-router-dom";
 import { API } from "../api";
 
 export function JobDetail() {
@@ -24,6 +25,9 @@ export function JobDetail() {
         <div>
           <h1>{job.title}</h1>
           <h3>${job.salary}</h3>
+          <NavLink to={`/jobs/${id}/update`}>
+            Update
+          </NavLink>
         </div>
       )}
     </div>
