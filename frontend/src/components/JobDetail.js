@@ -28,6 +28,10 @@ export function JobDetail() {
           <NavLink to={`/jobs/${id}/update`}>
             Update
           </NavLink>
+          <br />
+          <NavLink to={`/jobs/${id}/delete`}>
+            Delete
+          </NavLink>
         </div>
       )}
     </div>
