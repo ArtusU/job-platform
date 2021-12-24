@@ -1,14 +1,19 @@
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import axios from "axios";
+import { API } from "../api";
 
 export function Navbar() {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   function handleSubmit() {
-    logout();
-    navigate("/login");
+    axios.post(API.auth.logout)
+      .then(res => {
+        logout()
+        navigate('/login')
+      })
   }
 
   return (
