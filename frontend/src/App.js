@@ -1,5 +1,10 @@
 import React, { useContext } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { AuthContext, AuthContextProvider } from "./contexts/AuthContext";
 import { JobList } from "./components/JobList";
 import { JobDetail } from "./components/JobDetail";
@@ -8,6 +13,8 @@ import { Login } from "./components/Login";
 import { Navbar } from "./components/Navbar";
 import { JobUpdate } from "./components/JobUpdate";
 import { JobDelete } from "./components/JobDelete";
+import { Signup } from "./components/Signup";
+import { ConfirmEmail } from "./components/ConfirmEmail";
 
 function PrivateRoute({ children }) {
   const { user } = useContext(AuthContext);
@@ -64,6 +71,8 @@ export default function App() {
                 exact
               />
               <Route path="/login" element={<Login />} exact />
+              <Route path="/signup" element={<Signup />} exact />
+              <Route path="/accounts/confirm-email/:key" element={<ConfirmEmail />} exact />
               <Route path="/" element={<JobList />} exact />
             </Routes>
           </div>

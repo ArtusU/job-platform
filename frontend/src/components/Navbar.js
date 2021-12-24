@@ -9,11 +9,10 @@ export function Navbar() {
   const navigate = useNavigate();
 
   function handleSubmit() {
-    axios.post(API.auth.logout)
-      .then(res => {
-        logout()
-        navigate('/login')
-      })
+    axios.post(API.auth.logout).then((res) => {
+      logout();
+      navigate("/login");
+    });
   }
 
   return (
@@ -39,11 +38,18 @@ export function Navbar() {
               </button>
             </li>
           ) : (
-            <li className="px-3 text-gray-600">
-              <Link className="hover:text-blue-600" to="/login">
-                Login
-              </Link>
-            </li>
+            <div className="flex items-center">
+              <li className="px-3 text-gray-600">
+                <Link className="hover:text-blue-600" to="/signup">
+                  Signup
+                </Link>
+              </li>
+              <li className="px-3 text-gray-600">
+                <Link className="hover:text-blue-600" to="/login">
+                  Login
+                </Link>
+              </li>
+            </div>
           )}
         </div>
       </ul>
