@@ -203,4 +203,4 @@ sentry_sdk.init(
 
 # Your stuff...
 # ------------------------------------------------------------------------------
-FRONTEND_URL = "https://joba.job-board.com"
+FRONTEND_URL = "https://jobs.job-board.com"

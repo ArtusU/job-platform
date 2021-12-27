@@ -69,6 +69,7 @@ target/
 venv/
 ENV/
 
+
 # Rope project settings
 .ropeproject
 
@@ -332,4 +333,4 @@ djangojobboard/media/
 .ipython/
 .env
 .envs/*
-!.envs/.local/
+.envs/.local/
