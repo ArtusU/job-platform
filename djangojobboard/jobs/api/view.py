@@ -65,3 +65,4 @@ class CreatePaymentView(APIView):
             return Response({"clientSecret": intent["client_secret"]})
         except Exception as e:
             return Response({"error": str(e)}, status=403)
+        
