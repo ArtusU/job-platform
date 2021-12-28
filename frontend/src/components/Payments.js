@@ -7,9 +7,7 @@ import { API } from "../api";
 import { AuthContext } from "../contexts/AuthContext";
 import { CheckoutForm } from "./CheckoutForm";
 
-const stripePromise = loadStripe(
-  "pk_test_51HVHJwGjLUpjNrZJDqvwOaunx2iEyXPdWmePrvoXFBbr8qDXcp9csZyVXNkxOYZCAfcDWWbFXo8QE7teREJEAaTC00yl1qLyO4"
-);
+const stripePromise = loadStripe("pk_test_51HVHJwGjLUpjNrZJDqvwOaunx2iEyXPdWmePrvoXFBbr8qDXcp9csZyVXNkxOYZCAfcDWWbFXo8QE7teREJEAaTC00yl1qLyO4");
 
 export function Payment() {
   const {

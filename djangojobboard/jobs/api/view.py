@@ -1,18 +1,20 @@
+import datetime
+import stripe
+
 from django.conf import settings
+from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from djangojobboard.jobs.models import Job
+from djangojobboard.jobs.models import Job, SponsoredJobPost
 from .serializers import JobSerializer
 
-import stripe
 
-stripe.api_key = 'sk_test_51HVHJwGjLUpjNrZJu3vgdjlUm9iauNKb7KApNRI8MwMBjgRQZGITjUKQh5kRGjU5TvSekakytNwDXWw1HV3hQ1AZ00RqM8jzeG'
 stripe.api_key = settings.STRIPE_SECRET_KEY
-
-
 
 
 class JobListView(ListAPIView):
@@ -69,3 +71,45 @@ class CreatePaymentView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=403)
         
+
+@csrf_exempt
+def stripe_webhook(request):
+    payload = request.body
+    sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    if event["type"] == "payment_intent.succeeded":
+        intent = event["data"]["object"]
+
+        job_id = intent["metadata"]["job_id"]
+        job = Job.objects.get(id=job_id)
+
+        # Create the sponsored job post
+        SponsoredJobPost.objects.create(
+            job=job,
+            date_until=datetime.date.today() + datetime.timedelta(days=7),
+            stripe_payment_intent_id=intent["id"],
+        )
+
+        job.sponsored = True
+        job.save()
+
+        send_mail(
+            subject="Your sponsored job post is live!",
+            message=f"Thanks for your purchase. Your job: {job.title} is now sponsored",
+            recipient_list=[job.user.email],
+            from_email="your@email.com",
+        )
+
+    return HttpResponse(status=200)
