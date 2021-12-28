@@ -16,6 +16,7 @@ import { JobDelete } from "./components/JobDelete";
 import { Signup } from "./components/Signup";
 import { ConfirmEmail } from "./components/ConfirmEmail";
 import { Payment } from "./components/Payments";
+import { Success } from "./components/Success";
 
 function PrivateRoute({ children }) {
   const { user } = useContext(AuthContext);
@@ -73,7 +74,7 @@ export default function App() {
               />
               <Route path="/login" element={<Login />} exact />
               <Route
-                path="/payment"
+                path="/jobs/:id/sponsor"
                 element={
                   <PrivateRoute>
                     <Payment />
@@ -82,6 +83,7 @@ export default function App() {
                 exact
               />
               <Route path="/signup" element={<Signup />} exact />
+              <Route path="/payment/success" element={<Success />} exact />
               <Route
                 path="/accounts/confirm-email/:key"
                 element={<ConfirmEmail />}
