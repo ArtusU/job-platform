@@ -21,7 +21,6 @@ export function JobCreate() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         navigate(`/`);
       })
       .finally(() => {
