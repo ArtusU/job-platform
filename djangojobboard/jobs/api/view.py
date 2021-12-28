@@ -61,6 +61,9 @@ class CreatePaymentView(APIView):
                 automatic_payment_methods={
                     "enabled": True,
                 },
+                metadata={
+                    "job_id": request.data["job_id"]
+                }
             )
             return Response({"clientSecret": intent["client_secret"]})
         except Exception as e:

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { API } from "../api";
@@ -14,15 +15,17 @@ export function Payment() {
   const {
     user: { token },
   } = useContext(AuthContext);
+  const { id } = useParams();
   const [clientSecret, setClientSecret] = useState("");
-  console.log(clientSecret);
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
     axios
       .post(
         API.payment.createPayment,
-        {},
+        {
+          job_id: id,
+        },
         {
           headers: {
             Authorization: `Token ${token}`,
@@ -30,7 +33,7 @@ export function Payment() {
         }
       )
       .then((res) => setClientSecret(res.data.clientSecret));
-  }, [token]);
+  }, [token, id]);
 
   const appearance = {
     theme: "stripe",

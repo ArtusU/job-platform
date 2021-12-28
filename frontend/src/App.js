@@ -73,7 +73,7 @@ export default function App() {
               />
               <Route path="/login" element={<Login />} exact />
               <Route
-                path="/payment"
+                path="/jobs/:id/sponsor"
                 element={
                   <PrivateRoute>
                     <Payment />

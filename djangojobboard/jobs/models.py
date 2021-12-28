@@ -27,4 +27,3 @@ class SponsoredJobPost(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     date_until = models.DateTimeField()
     stripe_payment_intent_id = models.CharField(max_length=150)
-    

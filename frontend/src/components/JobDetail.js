@@ -11,7 +11,6 @@ export function JobDetail() {
   useEffect(() => {
     function fetchJob() {
       axios.get(API.jobs.retrieve(id)).then((res) => {
-        console.log(res.data);
         setJob(res.data);
       });
     }
@@ -53,9 +52,17 @@ export function JobDetail() {
             <p className="mt-3 text-gray-500">{job.description}</p>
           </div>
           <div className="mt-3 flex items-center">
+            {!job.sponsored && (
+              <NavLink
+                to={`/jobs/${id}/sponsor`}
+                className="bg-green-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-green-200 "
+              >
+                Sponsor
+              </NavLink>
+            )}
             <NavLink
               to={`/jobs/${id}/update`}
-              className="bg-blue-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-blue-200 "
+              className="ml-2 bg-blue-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-blue-200 "
             >
               Update
             </NavLink>
