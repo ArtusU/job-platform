@@ -7,30 +7,46 @@ import { API } from "../api";
 import { AuthContext } from "../contexts/AuthContext";
 import { CheckoutForm } from "./CheckoutForm";
 
-const stripePromise = loadStripe("pk_test_51HVHJwGjLUpjNrZJDqvwOaunx2iEyXPdWmePrvoXFBbr8qDXcp9csZyVXNkxOYZCAfcDWWbFXo8QE7teREJEAaTC00yl1qLyO4");
+const stripePromise = loadStripe(
+  "pk_test_51HVHJwGjLUpjNrZJDqvwOaunx2iEyXPdWmePrvoXFBbr8qDXcp9csZyVXNkxOYZCAfcDWWbFXo8QE7teREJEAaTC00yl1qLyO4"
+);
 
 export function Payment() {
+  const [clientSecret, setClientSecret] = useState("");
+  const [canSponsor, setCanSponsor] = useState(false);
   const {
     user: { token },
   } = useContext(AuthContext);
   const { id } = useParams();
-  const [clientSecret, setClientSecret] = useState("");
 
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
-    axios
-      .post(
-        API.payment.createPayment,
-        {
-          job_id: id,
-        },
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        }
-      )
-      .then((res) => setClientSecret(res.data.clientSecret));
+    async function createPayment() {
+      try {
+        const res = await axios.post(
+          API.payment.createPayment,
+          { job_id: id },
+          { headers: { Authorization: `Token ${token}` } }
+        );
+        setClientSecret(res.data.clientSecret);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    async function fetchSponsoredJobCount() {
+      try {
+        const res = await axios.get(API.jobs.sponsoredJobCount, {
+          headers: { Authorization: `Token ${token}` },
+        });
+        setCanSponsor(res.data.job_count < 3);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    createPayment();
+    fetchSponsoredJobCount();
   }, [token, id]);
 
   const appearance = {
@@ -43,7 +59,15 @@ export function Payment() {
 
   return (
     <div>
-      {clientSecret && (
+      {!canSponsor && (
+        <div className="text-gray-600">
+          <p>
+            We already have 3 sponsored posts. Please check back in a few days
+            for an open slot.
+          </p>
+        </div>
+      )}
+      {clientSecret && canSponsor && (
         <Elements stripe={stripePromise} options={options}>
           <CheckoutForm />
         </Elements>
