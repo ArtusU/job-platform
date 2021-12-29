@@ -62,6 +62,7 @@ class SponsoredJobCountView(APIView):
     
        
 class CreatePaymentView(APIView):
+    permission_classes = [IsAuthenticated, IsJobOwner]
     def post(self, request, *args, **kwargs):
         try:
             intent = stripe.PaymentIntent.create(
