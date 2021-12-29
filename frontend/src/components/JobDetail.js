@@ -1,21 +1,31 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useParams } from "react-router";
 import { API } from "../api";
+import { AuthContext } from "../contexts/AuthContext";
 
 export function JobDetail() {
   const [job, setJob] = useState(null);
+  const {
+    user: { token },
+  } = useContext(AuthContext);
   const { id } = useParams();
 
   useEffect(() => {
     function fetchJob() {
-      axios.get(API.jobs.retrieve(id)).then((res) => {
-        setJob(res.data);
-      });
+      axios
+        .get(API.jobs.retrieve(id), {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        })
+        .then((res) => {
+          setJob(res.data);
+        });
     }
     fetchJob();
-  }, [id]);
+  }, [id, token]);
 
   return (
     <div>
@@ -51,7 +61,8 @@ export function JobDetail() {
             )}
             <p className="mt-3 text-gray-500">{job.description}</p>
           </div>
-          <div className="mt-3 flex items-center">
+          {job.is_owner && (
+            <div className="mt-3 flex items-center">
             {!job.sponsored && (
               <NavLink
                 to={`/jobs/${id}/sponsor`}
@@ -73,6 +84,7 @@ export function JobDetail() {
               Delete
             </NavLink>
           </div>
+          )}
         </div>
       )}
     </div>
