@@ -7,11 +7,12 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView, RetrieveAPIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
 from djangojobboard.jobs.models import Job, SponsoredJobPost
 from .serializers import JobSerializer
+from .permissions import IsJobOwner
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -26,7 +27,7 @@ class JobListView(ListAPIView):
     
     
 class JobCreateView(CreateAPIView):
-    #permission_classes = [isAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = JobSerializer
 
     def perform_create(self, serializer):
@@ -41,7 +42,7 @@ class JobDetailView(RetrieveAPIView):
     
      
 class JobUpdateView(UpdateAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsJobOwner]
     serializer_class = JobSerializer
 
     def get_queryset(self):
@@ -49,7 +50,7 @@ class JobUpdateView(UpdateAPIView):
     
 
 class JobDeleteView(DestroyAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsJobOwner]
     def get_queryset(self):
         return Job.objects.all()
     
@@ -61,6 +62,7 @@ class SponsoredJobCountView(APIView):
     
        
 class CreatePaymentView(APIView):
+    permission_classes = [IsAuthenticated, IsJobOwner]
     def post(self, request, *args, **kwargs):
         try:
             intent = stripe.PaymentIntent.create(
