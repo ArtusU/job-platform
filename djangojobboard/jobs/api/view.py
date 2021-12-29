@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 
 from djangojobboard.jobs.models import Job, SponsoredJobPost
 from .serializers import JobSerializer
-from .permitions import IsJobOwner
+from .permissions import IsJobOwner
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
