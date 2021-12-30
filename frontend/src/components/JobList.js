@@ -65,7 +65,7 @@ export function JobList() {
     }
     fetchJobs();
     return () => null;
-  }, []);
+  }, [token]);
 
   return (
     <div>
