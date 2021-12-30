@@ -34,11 +34,20 @@ export function JobDetail() {
         <div>
           <div className="border border-gray-200 px-3 py-3 shadow-sm rounded-sm">
             <div className="flex items-center justify-between">
-              <NavLink to={`/jobs/${job.id}`}>
-                <h3 className="text-2xl text-gray-800 font-semibold">
-                  {job.title}
-                </h3>
-              </NavLink>
+              <div className="flex items-center">
+                {job.company_logo && (
+                  <img
+                    src={job.company_logo}
+                    className="h-20 w-20 px-3 py-3"
+                    alt={job.company_name}
+                  />
+                )}
+                <NavLink to={`/jobs/${job.id}`}>
+                  <h3 className="text-2xl text-gray-800 font-semibold">
+                    {job.title}
+                  </h3>
+                </NavLink>
+              </div>
               <div className="text-gray-800">
                 Added on {new Date(job.date_created).toDateString()}
               </div>
@@ -63,27 +72,27 @@ export function JobDetail() {
           </div>
           {job.is_owner && (
             <div className="mt-3 flex items-center">
-            {!job.sponsored && (
+              {!job.sponsored && (
+                <NavLink
+                  to={`/jobs/${id}/sponsor`}
+                  className="bg-green-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-green-200 "
+                >
+                  Sponsor
+                </NavLink>
+              )}
               <NavLink
-                to={`/jobs/${id}/sponsor`}
-                className="bg-green-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-green-200 "
+                to={`/jobs/${id}/update`}
+                className="ml-2 bg-blue-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-blue-200 "
               >
-                Sponsor
+                Update
               </NavLink>
-            )}
-            <NavLink
-              to={`/jobs/${id}/update`}
-              className="ml-2 bg-blue-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-blue-200 "
-            >
-              Update
-            </NavLink>
-            <NavLink
-              to={`/jobs/${id}/delete`}
-              className="ml-2 bg-red-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-red-200 "
-            >
-              Delete
-            </NavLink>
-          </div>
+              <NavLink
+                to={`/jobs/${id}/delete`}
+                className="ml-2 bg-red-100 rounded-md shadow-sm text-lg px-5 py-3 hover:bg-red-200 "
+              >
+                Delete
+              </NavLink>
+            </div>
           )}
         </div>
       )}
