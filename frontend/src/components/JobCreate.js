@@ -1,27 +1,58 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Formik, Field, Form } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API } from "../api";
 import { AuthContext } from "../contexts/AuthContext";
 
+function ImagePreview({ file }) {
+  const [imageSrc, setImageSrc] = useState(null);
+
+  useEffect(() => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImageSrc(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+
+  return (
+    <div>
+      {!imageSrc && "Loading..."}
+      {imageSrc && (
+        <img src={imageSrc} className="h-20 w-20 px-3 py-3" alt={file.name} />
+      )}
+    </div>
+  );
+}
+
 export function JobCreate() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
+  const navigate = useNavigate();
   const {
     user: { token },
   } = useContext(AuthContext);
 
   function handleSubmit(values) {
     setLoading(true);
+    const data = new FormData();
+    data.append("company_logo", file);
+    data.append("title", values.title);
+    data.append("company_name", values.company_name);
+    data.append("company_website", values.company_website);
+    data.append("location", values.location);
+    data.append("salary", values.salary);
+    data.append("available", values.available);
+    data.append("remote", values.remote);
     axios
-      .post(API.jobs.create, values, {
+      .post(API.jobs.create, data, {
         headers: {
           Authorization: `Token ${token}`,
         },
       })
       .then((res) => {
-        navigate(`/`);
+        navigate("/");
       })
       .finally(() => {
         setLoading(false);
@@ -35,9 +66,12 @@ export function JobCreate() {
         initialValues={{
           title: "",
           company_name: "",
+          company_logo: "",
           company_website: "",
           location: "",
           salary: "",
+          available: "",
+          remote: "",
         }}
         onSubmit={handleSubmit}
       >
@@ -96,6 +130,25 @@ export function JobCreate() {
                 </label>
               )}
             </Field>
+
+            <div className="flex items-center">
+              <label className="mt-3 block">
+                <span className="text-gray-700">Company Logo</span>
+                <input
+                  onChange={(e) => setFile(e.target.files[0])}
+                  type="file"
+                  className="
+                        mt-1
+                        block
+                        w-full
+                        rounded-md
+                        border-gray-300
+                        focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
+                    "
+                />
+              </label>
+              {file && <ImagePreview file={file} />}
+            </div>
 
             <Field name="company_website">
               {({ field, form }) => (
@@ -175,6 +228,67 @@ export function JobCreate() {
                     }
                   />
                 </label>
+              )}
+            </Field>
+            <Field name="available">
+              {({ field, form }) => (
+                <div class="block">
+                  <div class="mt-2">
+                    <div>
+                      <label class="inline-flex items-center">
+                        <input
+                          {...field}
+                          type="checkbox"
+                          class="
+                                                    rounded
+                                                    bg-gray-200
+                                                    border-transparent
+                                                    focus:border-transparent focus:bg-blue-200
+                                                    text-blue-700
+                                                    focus:ring-1 focus:ring-offset-2 focus:ring-blue-500
+                                                    "
+                          style={
+                            form.touched.available && form.errors.available
+                              ? { border: "2px solid var(--primary-red)" }
+                              : null
+                          }
+                        />
+                        <span class="ml-2">Available</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </Field>
+
+            <Field name="remote">
+              {({ field, form }) => (
+                <div class="block">
+                  <div class="mt-2">
+                    <div>
+                      <label class="inline-flex items-center">
+                        <input
+                          {...field}
+                          type="checkbox"
+                          class="
+                                                    rounded
+                                                    bg-gray-200
+                                                    border-transparent
+                                                    focus:border-transparent focus:bg-blue-200
+                                                    text-blue-700
+                                                    focus:ring-1 focus:ring-offset-2 focus:ring-blue-500
+                                                    "
+                          style={
+                            form.touched.remote && form.errors.remote
+                              ? { border: "2px solid var(--primary-red)" }
+                              : null
+                          }
+                        />
+                        <span class="ml-2">Remote</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
               )}
             </Field>
 
